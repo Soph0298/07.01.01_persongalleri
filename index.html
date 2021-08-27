@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Persongalleri</h1>
+
+    <section class="person_container"></section>
+
+    <template>
+        <article class="personer">
+            <img src="" alt="">
+            <h2></h2>
+            <p class="id"></p>
+            <p class="hobby"></p>
+        </article>
+    </template>
+</body>
+
+
+
+<script>
+        window.addEventListener("DOMContentLoaded", start);
+        console.log("siden er loaded");
+        
+
+        function start () {
+
+        const beholder = document.querySelector(".person_container");
+        const skabelon = document.querySelector("template");
+
+        //indholdet fra en url om persongalleri// 
+        const url = "https://persongalleri-5d3e.restdb.io/rest/persongalleri";
+        const options = { 
+            headers:{
+             "x-apikey": "600fe9211346a1524ff12e31",},
+
+        }
+
+        async function hentdata() {
+        const resultat = await fetch(url, options);
+        const json = await resultat.json();
+        visPersoner(json);
+        console.log(json);
+        }
+        
+
+        function visPersoner(json) {
+        json.forEach((person) => {
+        const klon = skabelon.cloneNode(true).content;
+        klon.querySelector("h2").textContent = person.fornavn + " " + person.efternavn;
+        klon.querySelector("img").src = "billeder/" + person.billede;
+        klon.querySelector(".id").textContent = "Email: " + person.email;
+        klon.querySelector(".hobby").textContent = "Hobby" + person.hobby;
+        klon.querySelector(".personer").style.border = "2px solid orange";
+        klon.querySelector(".personer").style.margin = "10px";
+        klon.querySelector(".personer").style.padding = "10px";
+        // klon.querySelector(".personer").style.width = "400px";
+        beholder.appendChild(klon);
+      });
+    }
+    hentdata(url);
+  }
+        
+</script>
+
+<style>
+
+    * {
+        margin: 0;
+        gap: 10px;
+    }
+    .person_container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 10px;
+        max-width: 960px;
+        margin: 0 auto;
+
+        }
+    img {
+        width: 100%;
+        height: auto;
+    }
+</style>
+</html>
